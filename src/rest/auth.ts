@@ -15,13 +15,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 export const db = getFirestore(app);
-Auth();
 
-async function Auth() {
+interface loginProps {
+  username: string;
+  password: string;
+}
+
+export async function Auth(props: loginProps) {
   const result = await signInWithEmailAndPassword(
     auth,
-    process.env.REACT_APP_AUTH_EMAIL,
-    process.env.REACT_APP_AUTH_PASSWORD
+    props.username,
+    props.password
   )
     .then(() => {
       return true;

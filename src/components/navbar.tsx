@@ -2,7 +2,7 @@ import React from "react";
 import { Homepage } from "./pages/homepage";
 import { News } from "./pages/news";
 import { Travels } from "./pages/travels";
-import { Experiences } from "./pages/experiences";
+import { Events } from "./pages/events";
 import { GoogleMap } from "./pages/googleMap";
 import {
   BrowserRouter,
@@ -48,7 +48,7 @@ export const Navbar = () => {
         <Route path="/" element={<Homepage />}></Route>
         <Route path="/news" element={<News />}></Route>
         <Route path="/travels" element={<Travels />}></Route>
-        <Route path="/events" element={<Experiences />}></Route>
+        <Route path="/events" element={<Events />}></Route>
         <Route path="/europe" element={<GoogleMap />}></Route>
         <Route path="/blog/:id" element={<Blog />}></Route>
       </Routes>

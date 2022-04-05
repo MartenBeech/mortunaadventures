@@ -102,7 +102,11 @@ export function Blog() {
               <div className="w-full">
                 <TextareaAutosize
                   className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg text-sm"
-                  disabled={state.id ? true : false}
+                  disabled={
+                    Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN
+                      ? false
+                      : true
+                  }
                   value={post}
                   onChange={(event) => {
                     let posts = [...state.posts];

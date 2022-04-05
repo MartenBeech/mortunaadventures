@@ -29,7 +29,10 @@ export function Blog() {
     const getData = async () => {
       const blog = await GetBlog(id);
       setState(blog);
-      const images = await GetImages({ id: id });
+      const images = await GetImages({
+        id: id,
+        maxImages: blog.posts.length + 1,
+      });
       setImageURLs(images);
     };
 

@@ -25,12 +25,16 @@ export function UploadImages(props: uploadImagesProps) {
 
 interface getImagesProps {
   id: number;
+  maxImages: number;
 }
 
 export async function GetImages(props: getImagesProps) {
   const storage = getStorage();
-  const listRef = ref(storage, `images/${props.id}`);
-  const res = await listAll(listRef);
+
+  const imageIds: Array<number> = [];
+  for (let index = 0; index < props.maxImages; index++) {
+    imageIds.push(index);
+  }
 
   const getFolderData = async (index: number) => {
     const listRef = ref(storage, `images/${props.id}/${index}`);
@@ -45,7 +49,7 @@ export async function GetImages(props: getImagesProps) {
   };
 
   const URLs = await Promise.all(
-    res.prefixes.map((prefix, index) => {
+    imageIds.map((id, index) => {
       return getFolderData(index);
     })
   );

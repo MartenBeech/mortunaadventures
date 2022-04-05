@@ -4,6 +4,7 @@ import {
   uploadBytes,
   listAll,
   getDownloadURL,
+  ListResult,
 } from "firebase/storage";
 
 interface uploadImagesProps {
@@ -25,17 +26,28 @@ export function UploadImages(props: uploadImagesProps) {
 
 interface getImagesProps {
   id: number;
-  chapter: number;
 }
 
 export async function GetImages(props: getImagesProps) {
   const storage = getStorage();
-  const listRef = ref(storage, `images/${props.id}/${props.chapter}`);
+  const listRef = ref(storage, `images/${props.id}`);
   const res = await listAll(listRef);
 
+  const getFolderData = async (index: number) => {
+    const listRef = ref(storage, `images/${props.id}/${index}`);
+    const res = await listAll(listRef);
+
+    const URLs = await Promise.all(
+      res.items.map((itemRef) => {
+        return getDownloadURL(itemRef);
+      })
+    );
+    return URLs;
+  };
+
   const URLs = await Promise.all(
-    res.items.map((itemRef) => {
-      return getDownloadURL(itemRef);
+    res.prefixes.map((prefix, index) => {
+      return getFolderData(index);
     })
   );
 

@@ -13,8 +13,16 @@ module.exports = {
       minHeight: {
         8: "32px",
         12: "48px",
+        40: "160px",
+        60: "240px",
       },
       height: { "11/12": "91.666667%", 88: "22rem", 104: "26rem" },
+      maxHeight: {
+        8: "32px",
+        12: "48px",
+        40: "160px",
+        60: "240px",
+      },
       width: { 88: "22rem", 104: "26rem" },
       fontFamily: {
         montserrat: ["sans-serif"],

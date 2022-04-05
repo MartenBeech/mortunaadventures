@@ -5,6 +5,7 @@ import { GetImages, UploadImages } from "../../rest/storage";
 import { GetCurrentDate } from "../../services/dateConverter";
 import { Title, TitleInput } from "../title";
 import { ImageModal } from "../imageModal";
+import TextareaAutosize from "react-textarea-autosize";
 
 export function Blog() {
   const url = window.location.href;
@@ -16,10 +17,10 @@ export function Blog() {
     date: "",
     id: 0,
     location: { lat: 0, long: 0 },
-    posts: [""],
+    posts: ["Text here"],
     title: "Title",
   } as GetBlogResponse);
-  const [uploadedFiles, setUploadedFiles] = useState([[]] as Array<
+  const [uploadedFiles, setUploadedFiles] = useState([[], []] as Array<
     Array<File>
   >);
   const [imageURLs, setImageURLs] = useState([] as Array<Array<string>>);
@@ -30,11 +31,12 @@ export function Blog() {
     const getData = async () => {
       const blog = await GetBlog(id);
       setState(blog);
-      const images = await Promise.all(
-        blog.posts.map((post, index) => {
-          return GetImages({ id: id, chapter: index });
-        })
-      );
+      // const images = await Promise.all(
+      //   blog.posts.map((post, index) => {
+      //     return GetImages({ id: id, chapter: index });
+      //   })
+      // );
+      const images = await GetImages({ id: id });
       setImageURLs(images);
     };
 
@@ -102,8 +104,8 @@ export function Blog() {
           <div key={index} className="mt-8">
             <div className="mt-2">
               <div className="w-full">
-                <textarea
-                  className="font-montserrat w-full bg-background border border-base h-60 px-2 py-2 rounded-lg"
+                <TextareaAutosize
+                  className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg"
                   disabled={state.id ? true : false}
                   value={post}
                   onChange={(event) => {
@@ -114,27 +116,38 @@ export function Blog() {
                 />
               </div>
             </div>
-            <div className="flex w-full justify-center">
-              {imageURLs[index] && (
+            {uploadedFiles[index + 1] && (
+              <div className="flex w-full justify-center">
                 <div>
-                  {imageURLs[index].length > 0 && (
-                    <img className="max-h-60" src={imageURLs[index][0]} />
+                  {uploadedFiles[index + 1].length > 0 && (
+                    <img
+                      className="max-h-60"
+                      src={URL.createObjectURL(uploadedFiles[index + 1][0])}
+                    />
                   )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+            {imageURLs[index + 1] && (
+              <div className="flex w-full justify-center">
+                <div>
+                  {imageURLs[index + 1].length > 0 && (
+                    <img className="max-h-60" src={imageURLs[index + 1][0]} />
+                  )}
+                </div>
+              </div>
+            )}
             {!state.id && (
               <div>
                 <input
                   type={"file"}
-                  multiple
                   onChange={(event) => {
                     let uploadedFilesCopy: Array<Array<File>> = [];
                     uploadedFiles.map((uploadedFile) => {
                       uploadedFilesCopy = [...uploadedFilesCopy, uploadedFile];
                     });
                     const selectedFiles = Array.from(event.target.files);
-                    uploadedFilesCopy[index] = selectedFiles;
+                    uploadedFilesCopy[index + 1] = selectedFiles;
 
                     setUploadedFiles(uploadedFilesCopy);
                   }}
@@ -144,14 +157,62 @@ export function Blog() {
           </div>
         );
       })}
+      <Title title="Gallery" />
+      <div className="mt-8">
+        {imageURLs[0] && (
+          <div className="flex w-full justify-center">
+            <div>
+              {imageURLs[0].map((imageUrl, index) => {
+                return (
+                  <div key={index} className="mb-4 flex justify-center">
+                    <img className="max-h-60" src={imageUrl} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {uploadedFiles[0] && (
+          <div className="flex w-full justify-center">
+            <div>
+              {uploadedFiles[0].map((uploadedFile, index) => {
+                return (
+                  <div key={index} className="mb-4 flex justify-center">
+                    <img
+                      className="max-h-60"
+                      src={URL.createObjectURL(uploadedFile)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {!state.id && (
+          <input
+            type={"file"}
+            multiple
+            onChange={(event) => {
+              let uploadedFilesCopy: Array<Array<File>> = [];
+              uploadedFiles.map((uploadedFile) => {
+                uploadedFilesCopy = [...uploadedFilesCopy, uploadedFile];
+              });
+              const selectedFiles = Array.from(event.target.files);
+              uploadedFilesCopy[0] = selectedFiles;
+
+              setUploadedFiles(uploadedFilesCopy);
+            }}
+          />
+        )}
+      </div>
       {!state.id && (
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-8">
           <button
-            className="border border-base bg-highlights hover:bg-details-light w-1/6 mr-8 h-20 mb-4 rounded-xl font-montserrat"
+            className="border border-base bg-highlights hover:bg-details-light w-1/3 mr-8 h-12 mb-4 rounded-xl font-montserrat"
             onClick={() => {
               setState({
                 ...state,
-                posts: [...state.posts, ""],
+                posts: [...state.posts, "Text here"],
               });
               setUploadedFiles([...uploadedFiles, []]);
             }}
@@ -159,7 +220,7 @@ export function Blog() {
             Add Chapter
           </button>
           <button
-            className="border border-base bg-highlights hover:bg-details-light w-1/4 h-20 mb-4 rounded-xl font-montserrat"
+            className="border border-base bg-highlights hover:bg-details-light w-1/2 h-12 mb-4 rounded-xl font-montserrat"
             onClick={() => {
               imageURLs;
 

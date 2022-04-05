@@ -1,47 +1,35 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import worldMap from "../../images/worldMap.png";
 
 export function Homepage() {
   return (
-    <div>
-      <div className="flex justify-center h-11/12">
-        <div className="rounded-lg h-full w-full ml-40 mr-40 flex bg-[url('../src/images/worldMap.png')] justify-center">
-          <div className="w-full">
-            <div className="flex mt-40">
-              <div className="flex flex-col">
-                <Link
-                  className="border border-black w-104 h-88 ml-0"
-                  to={"europe"}
-                ></Link>
-                <Link
-                  className="border border-black w-88 h-88 ml-48 mt-8"
-                  to={"europe"}
-                ></Link>
-              </div>
-              <div className="flex flex-col">
-                <Link
-                  className="border border-black w-88 h-72 ml-4"
-                  to={"europe"}
-                ></Link>
-                <Link
-                  className="border border-black w-96 h-88 ml-4"
-                  to={"europe"}
-                ></Link>
-              </div>
-              <div className="flex flex-col">
-                <Link
-                  className="border border-black w-104 h-104 ml-0"
-                  to={"europe"}
-                ></Link>
-                <Link
-                  className="border border-black w-104 h-80 ml-20"
-                  to={"europe"}
-                ></Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="h-full w-full relative">
+      <img className="relative" src={worldMap} />
+      <Link
+        className="absolute border border-black w-2/7 h-2/5 top-20%"
+        to={"europe"}
+      ></Link>
+      <Link
+        className="absolute border border-black w-1/4 h-2/5 left-12% top-60%"
+        to={"europe"}
+      ></Link>
+      <Link
+        className="absolute border border-black w-1/4 h-1/3 left-40% top-16%"
+        to={"europe"}
+      ></Link>
+      <Link
+        className="absolute border border-black w-1/4 h-2/5 left-40% top-52%"
+        to={"europe"}
+      ></Link>
+      <Link
+        className="absolute border border-black w-2/7 h-1/2 left-68% top-16%"
+        to={"europe"}
+      ></Link>
+      <Link
+        className="absolute border border-black w-1/4 h-1/3 left-72% top-68%"
+        to={"europe"}
+      ></Link>
     </div>
   );
 }

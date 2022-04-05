@@ -4,7 +4,6 @@ import { GetBlog, CreateBlog } from "../../rest/blog";
 import { GetImages, UploadImages } from "../../rest/storage";
 import { GetCurrentDate } from "../../services/dateConverter";
 import { Title, TitleInput } from "../title";
-import { ImageModal } from "../imageModal";
 import TextareaAutosize from "react-textarea-autosize";
 import { Username } from "./login";
 
@@ -25,8 +24,6 @@ export function Blog() {
     Array<File>
   >);
   const [imageURLs, setImageURLs] = useState([] as Array<Array<string>>);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [srcsClicked, setSrcsClicked] = useState([""]);
 
   useEffect(() => {
     const getData = async () => {
@@ -43,13 +40,6 @@ export function Blog() {
 
   return (
     <div className="ml-8 mr-8">
-      {modalOpen && (
-        <ImageModal
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          srcs={srcsClicked}
-        />
-      )}
       {state.id ? (
         <Title title={state.title} />
       ) : (

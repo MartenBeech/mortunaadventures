@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Username } from "./login";
 import { Title } from "../title";
 
 export function News() {
-  const [state, setState] = useState({});
-
   return (
     <div className="w-full">
       <div className="ml-8 mr-8">

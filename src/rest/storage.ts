@@ -4,7 +4,6 @@ import {
   uploadBytes,
   listAll,
   getDownloadURL,
-  ListResult,
 } from "firebase/storage";
 
 interface uploadImagesProps {

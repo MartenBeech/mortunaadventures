@@ -32,6 +32,9 @@ module.exports = {
       fontFamily: {
         montserrat: ["sans-serif"],
       },
+      fontSize: {
+        title: "1.875rem",
+      },
       maxWidth: {
         "4/5": "80%",
       },

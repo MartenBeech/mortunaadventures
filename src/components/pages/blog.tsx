@@ -6,6 +6,7 @@ import { GetCurrentDate } from "../../services/dateConverter";
 import { Title, TitleInput } from "../title";
 import { ImageModal } from "../imageModal";
 import TextareaAutosize from "react-textarea-autosize";
+import { Username } from "./login";
 
 export function Blog() {
   const url = window.location.href;
@@ -31,11 +32,6 @@ export function Blog() {
     const getData = async () => {
       const blog = await GetBlog(id);
       setState(blog);
-      // const images = await Promise.all(
-      //   blog.posts.map((post, index) => {
-      //     return GetImages({ id: id, chapter: index });
-      //   })
-      // );
       const images = await GetImages({ id: id });
       setImageURLs(images);
     };
@@ -60,7 +56,7 @@ export function Blog() {
         <TitleInput state={state} setState={setState} />
       )}
 
-      {!state.id && (
+      {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
         <div className="flex flex-col justify-center mb-8 bg-details-light h-24">
           <div className="flex items-center w-full mb-2">
             <div className="font-montserrat font-bold w-1/4 ml-4">Lati: </div>
@@ -105,7 +101,7 @@ export function Blog() {
             <div className="mt-2">
               <div className="w-full">
                 <TextareaAutosize
-                  className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg"
+                  className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg text-sm"
                   disabled={state.id ? true : false}
                   value={post}
                   onChange={(event) => {
@@ -121,7 +117,7 @@ export function Blog() {
                 <div>
                   {uploadedFiles[index + 1].length > 0 && (
                     <img
-                      className="max-h-60"
+                      className="max-h-56"
                       src={URL.createObjectURL(uploadedFiles[index + 1][0])}
                     />
                   )}
@@ -132,12 +128,12 @@ export function Blog() {
               <div className="flex w-full justify-center">
                 <div>
                   {imageURLs[index + 1].length > 0 && (
-                    <img className="max-h-60" src={imageURLs[index + 1][0]} />
+                    <img className="max-h-56" src={imageURLs[index + 1][0]} />
                   )}
                 </div>
               </div>
             )}
-            {!state.id && (
+            {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
               <div>
                 <input
                   type={"file"}
@@ -188,7 +184,7 @@ export function Blog() {
             </div>
           </div>
         )}
-        {!state.id && (
+        {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
           <input
             type={"file"}
             multiple
@@ -205,7 +201,7 @@ export function Blog() {
           />
         )}
       </div>
-      {!state.id && (
+      {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
         <div className="flex justify-end mt-8">
           <button
             className="border border-base bg-highlights hover:bg-details-light w-1/3 mr-8 h-12 mb-4 rounded-xl font-montserrat"

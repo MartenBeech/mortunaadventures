@@ -17,7 +17,7 @@ export function Blog() {
     date: "",
     id: 0,
     location: { lat: 0, long: 0 },
-    posts: ["Text here"],
+    posts: ["*TEXT HERE*"],
     title: "Title",
   } as GetBlogResponse);
   const [uploadedFiles, setUploadedFiles] = useState([[], []] as Array<
@@ -25,9 +25,11 @@ export function Blog() {
   >);
   const [imageURLs, setImageURLs] = useState([] as Array<Array<string>>);
   const [loading, setLoading] = useState(false);
+  const [notifyMsg, setNotifyMsg] = useState("");
 
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
       const blog = await GetBlog(id);
       setState(blog);
       const images = await GetImages({
@@ -35,6 +37,7 @@ export function Blog() {
         maxImages: blog.posts.length + 1,
       });
       setImageURLs(images);
+      setLoading(false);
     };
 
     if (id) {
@@ -44,10 +47,16 @@ export function Blog() {
 
   return (
     <div className="ml-8 mr-8">
-      {state.id ? (
-        <Title title={state.title} />
-      ) : (
+      {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN ? (
         <TitleInput state={state} setState={setState} />
+      ) : (
+        <Title title={state.title} />
+      )}
+
+      {notifyMsg && (
+        <div className="flex justify-center items-center w-full bg-highlights mb-8">
+          {notifyMsg}
+        </div>
       )}
 
       {loading ? (
@@ -220,7 +229,7 @@ export function Blog() {
                 onClick={() => {
                   setState({
                     ...state,
-                    posts: [...state.posts, "Text here"],
+                    posts: [...state.posts, "*TEXT HERE*"],
                   });
                   setUploadedFiles([...uploadedFiles, []]);
                 }}
@@ -230,23 +239,35 @@ export function Blog() {
               <button
                 className="border border-base bg-highlights hover:bg-details-light w-1/2 h-12 mb-4 rounded-xl font-montserrat"
                 onClick={() => {
-                  imageURLs;
+                  if (state.location.lat >= 360 || state.location.long >= 360) {
+                    setNotifyMsg("Latitude/Longitude must be less than 360");
+                  } else {
+                    setLoading(true);
 
-                  CreateBlog({
-                    id: state.id,
-                    location: state.location,
-                    posts: state.posts,
-                    title: state.title,
-                    date: GetCurrentDate(),
-                  }).then((id) => {
-                    uploadedFiles.map((uploadedFile, index) => {
-                      UploadImages({
-                        id: id,
-                        files: uploadedFile,
-                        chapter: index,
+                    const uploader = async (id: number) => {
+                      await Promise.all(
+                        uploadedFiles.map((uploadedFile, index) => {
+                          return UploadImages({
+                            id: id,
+                            files: uploadedFile,
+                            chapter: index,
+                          });
+                        })
+                      ).then(() => {
+                        setNotifyMsg("Successfully uploaded blog!");
                       });
+                    };
+
+                    CreateBlog({
+                      id: state.id,
+                      location: state.location,
+                      posts: state.posts,
+                      title: state.title,
+                      date: GetCurrentDate(),
+                    }).then((id) => {
+                      uploader(id);
                     });
-                  });
+                  }
                 }}
               >
                 Submit

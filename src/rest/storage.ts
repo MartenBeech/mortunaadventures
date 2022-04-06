@@ -12,15 +12,18 @@ interface uploadImagesProps {
   files: Array<File>;
 }
 
-export function UploadImages(props: uploadImagesProps) {
+export async function UploadImages(props: uploadImagesProps) {
   const storage = getStorage();
-  props.files.map((file) => {
-    const imagesRef = ref(
-      storage,
-      `images/${props.id}/${props.chapter}/${file.name}`
-    );
-    uploadBytes(imagesRef, file);
-  });
+  const uploadResult = await Promise.all(
+    props.files.map((file) => {
+      const imagesRef = ref(
+        storage,
+        `images/${props.id}/${props.chapter}/${file.name}`
+      );
+      return uploadBytes(imagesRef, file);
+    })
+  );
+  return uploadResult;
 }
 
 interface getImagesProps {

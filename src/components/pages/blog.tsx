@@ -239,8 +239,8 @@ export function Blog() {
               <button
                 className="border border-base bg-highlights hover:bg-details-light w-1/2 h-12 mb-4 rounded-xl font-montserrat"
                 onClick={() => {
-                  if (state.location.lat >= 360 || state.location.long >= 360) {
-                    setNotifyMsg("Latitude/Longitude must be less than 360");
+                  if (state.location.lat >= 90 || state.location.long >= 90) {
+                    setNotifyMsg("Latitude/Longitude must be less than 90");
                   } else {
                     setLoading(true);
 

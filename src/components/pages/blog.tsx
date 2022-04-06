@@ -6,6 +6,7 @@ import { GetCurrentDate } from "../../services/dateConverter";
 import { Title, TitleInput } from "../title";
 import TextareaAutosize from "react-textarea-autosize";
 import { Username } from "./login";
+import { NewsBox } from "../newsBox";
 
 export function Blog() {
   const url = window.location.href;
@@ -13,15 +14,16 @@ export function Blog() {
   const blogLoc = url.search(blogUrl);
   const id = parseInt(url.substring(blogLoc + blogUrl.length));
 
-  const [state, setState] = useState({
-    date: "",
+  const [state, setState] = useState<GetBlogResponse>({
+    date: GetCurrentDate(),
     label: "",
     id: 0,
     location: { lat: 0, long: 0 },
-    posts: ["*TEXT HERE*"],
-    title: "Title",
-  } as GetBlogResponse);
-  const [uploadedFiles, setUploadedFiles] = useState([[], []] as Array<
+    posts: ["TEXTHERE"],
+    title: "TITLE",
+    description: "DESCRIPTION",
+  });
+  const [uploadedFiles, setUploadedFiles] = useState([[], [], []] as Array<
     Array<File>
   >);
   const [imageURLs, setImageURLs] = useState([] as Array<Array<string>>);
@@ -35,7 +37,7 @@ export function Blog() {
       setState(blog);
       const images = await GetImages({
         id: id,
-        maxImages: blog.posts.length + 1,
+        maxImages: blog.posts.length + 2,
       });
       setImageURLs(images);
       setLoading(false);
@@ -54,6 +56,17 @@ export function Blog() {
         <Title title={state.title} />
       )}
 
+      <TextareaAutosize
+        className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg"
+        disabled={
+          Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN ? false : true
+        }
+        value={state.description}
+        onChange={(event) => {
+          setState({ ...state, description: event.target.value });
+        }}
+      />
+
       {notifyMsg && (
         <div className="flex justify-center items-center w-full bg-highlights mb-8">
           {notifyMsg}
@@ -65,63 +78,81 @@ export function Blog() {
       ) : (
         <div>
           {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
-            <div className="flex flex-col justify-center mb-8 bg-details-light h-40">
-              <div className="flex items-center w-full">
-                <div className="font-montserrat font-bold w-1/4 ml-4">
-                  Lati:{" "}
+            <div className="flex flex-col justify-center mb-8 bg-details-light">
+              <div className="mt-2 mb-2">
+                <div className="flex items-center w-full">
+                  <div className="font-montserrat font-bold w-1/4 ml-4">
+                    Lati:{" "}
+                  </div>
+                  <input
+                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                    type={"number"}
+                    value={state.location.lat}
+                    onChange={(event) => {
+                      setState({
+                        ...state,
+                        location: {
+                          ...state.location,
+                          lat: parseFloat(event.target.value),
+                        },
+                      });
+                    }}
+                  />
                 </div>
-                <input
-                  className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
-                  type={"number"}
-                  value={state.location.lat}
-                  onChange={(event) => {
-                    setState({
-                      ...state,
-                      location: {
-                        ...state.location,
-                        lat: parseFloat(event.target.value),
-                      },
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex items-center w-full mt-2">
-                <div className="font-montserrat font-bold w-1/4 ml-4">
-                  Long:{" "}
+                <div className="flex items-center w-full mt-2">
+                  <div className="font-montserrat font-bold w-1/4 ml-4">
+                    Long:{" "}
+                  </div>
+                  <input
+                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                    type={"number"}
+                    value={state.location.long}
+                    onChange={(event) => {
+                      setState({
+                        ...state,
+                        location: {
+                          ...state.location,
+                          long: parseFloat(event.target.value),
+                        },
+                      });
+                    }}
+                  />
                 </div>
-                <input
-                  className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
-                  type={"number"}
-                  value={state.location.long}
-                  onChange={(event) => {
-                    setState({
-                      ...state,
-                      location: {
-                        ...state.location,
-                        long: parseFloat(event.target.value),
-                      },
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex items-center w-full mt-2">
-                <div className="font-montserrat font-bold w-1/4 ml-4">
-                  Label:{" "}
+                <div className="flex items-center w-full mt-2">
+                  <div className="font-montserrat font-bold w-1/4 ml-4">
+                    Label:{" "}
+                  </div>
+                  <select
+                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                    value={state.label}
+                    onChange={(event) => {
+                      setState({
+                        ...state,
+                        label: event.target.value,
+                      });
+                    }}
+                  >
+                    <option value={""}>Please select an option...</option>
+                    <option>Travels</option>
+                    <option>Events</option>
+                  </select>
                 </div>
-                <select
-                  className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
-                  value={state.label}
-                  onChange={(event) => {
-                    setState({
-                      ...state,
-                      label: event.target.value,
-                    });
-                  }}
-                >
-                  <option value={""}>Please select an option...</option>
-                  <option>Travels</option>
-                  <option>Events</option>
-                </select>
+                <div className="flex items-center w-full mt-2">
+                  <div className="font-montserrat font-bold w-1/4 ml-4">
+                    Date:{" "}
+                  </div>
+                  <input
+                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                    type={"text"}
+                    value={state.date}
+                    onChange={(event) => {
+                      setState({
+                        ...state,
+                        date: event.target.value,
+                      });
+                    }}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -147,28 +178,28 @@ export function Blog() {
                     />
                   </div>
                 </div>
-                {uploadedFiles[index + 1] && (
+                {uploadedFiles[index + 2] && (
                   <div className="flex w-full justify-center">
                     <div>
-                      {uploadedFiles[index + 1].length > 0 && (
+                      {uploadedFiles[index + 2].length > 0 && (
                         <img
-                          src={URL.createObjectURL(uploadedFiles[index + 1][0])}
+                          src={URL.createObjectURL(uploadedFiles[index + 2][0])}
                         />
                       )}
                     </div>
                   </div>
                 )}
-                {imageURLs[index + 1] && (
+                {imageURLs[index + 2] && (
                   <div className="flex w-full justify-center">
                     <div>
-                      {imageURLs[index + 1].length > 0 && (
-                        <img src={imageURLs[index + 1][0]} />
+                      {imageURLs[index + 2].length > 0 && (
+                        <img src={imageURLs[index + 2][0]} />
                       )}
                     </div>
                   </div>
                 )}
                 {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
-                  <div>
+                  <div className="mt-2">
                     <input
                       type={"file"}
                       onChange={(event) => {
@@ -180,7 +211,7 @@ export function Blog() {
                           ];
                         });
                         const selectedFiles = Array.from(event.target.files);
-                        uploadedFilesCopy[index + 1] = selectedFiles;
+                        uploadedFilesCopy[index + 2] = selectedFiles;
 
                         setUploadedFiles(uploadedFilesCopy);
                       }}
@@ -236,58 +267,101 @@ export function Blog() {
             )}
           </div>
           {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
-            <div className="flex justify-end mt-8">
-              <button
-                className="border border-base bg-highlights hover:bg-details-light w-1/3 mr-8 h-12 mb-4 rounded-xl font-montserrat"
-                onClick={() => {
-                  setState({
-                    ...state,
-                    posts: [...state.posts, "*TEXT HERE*"],
-                  });
-                  setUploadedFiles([...uploadedFiles, []]);
-                }}
-              >
-                Add Chapter
-              </button>
-              <button
-                className="border border-base bg-highlights hover:bg-details-light w-1/2 h-12 mb-4 rounded-xl font-montserrat"
-                onClick={() => {
-                  if (state.location.lat >= 90 || state.location.long >= 90) {
-                    setNotifyMsg("Latitude/Longitude must be less than 90");
-                  } else if (!state.label) {
-                    setNotifyMsg("Please select a label");
-                  } else {
-                    setLoading(true);
-
-                    const uploader = async (id: number) => {
-                      await Promise.all(
-                        uploadedFiles.map((uploadedFile, index) => {
-                          return UploadImages({
-                            id: id,
-                            files: uploadedFile,
-                            chapter: index,
-                          });
-                        })
-                      ).then(() => {
-                        setNotifyMsg("Successfully uploaded blog!");
-                      });
-                    };
-
-                    CreateBlog({
-                      id: state.id,
-                      label: state.label,
-                      location: state.location,
-                      posts: state.posts,
-                      title: state.title,
-                      date: GetCurrentDate(),
-                    }).then((id) => {
-                      uploader(id);
+            <div>
+              <div className="flex justify-end mt-8">
+                <button
+                  className="border border-base bg-highlights hover:bg-details-light w-1/3 mr-8 h-12 mb-4 rounded-xl font-montserrat"
+                  onClick={() => {
+                    setState({
+                      ...state,
+                      posts: [...state.posts, "*TEXT HERE*"],
                     });
-                  }
-                }}
-              >
-                Submit
-              </button>
+                    setUploadedFiles([...uploadedFiles, []]);
+                  }}
+                >
+                  Add Chapter
+                </button>
+                <button
+                  className="border border-base bg-highlights hover:bg-details-light w-1/2 h-12 mb-4 rounded-xl font-montserrat"
+                  onClick={() => {
+                    if (state.location.lat >= 90 || state.location.long >= 90) {
+                      setNotifyMsg("Latitude/Longitude must be less than 90");
+                    } else if (!state.label) {
+                      setNotifyMsg("Please select a label");
+                    } else {
+                      setLoading(true);
+                      setNotifyMsg("");
+
+                      const uploader = async (id: number) => {
+                        await Promise.all(
+                          uploadedFiles.map((uploadedFile, index) => {
+                            return UploadImages({
+                              id: id,
+                              files: uploadedFile,
+                              chapter: index,
+                            });
+                          })
+                        ).then(() => {
+                          setNotifyMsg("Successfully uploaded blog!");
+                        });
+                      };
+
+                      CreateBlog({
+                        id: state.id,
+                        label: state.label,
+                        location: state.location,
+                        posts: state.posts,
+                        title: state.title,
+                        date: state.date,
+                        description: state.description,
+                      }).then((id) => {
+                        uploader(id);
+                      });
+                    }
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+              <Title title="Preview" />
+              {uploadedFiles[1] && uploadedFiles[1].length > 0 && (
+                <div>
+                  <NewsBox
+                    date={state.date}
+                    id={state.id}
+                    imgSrc={URL.createObjectURL(uploadedFiles[1][0])}
+                    title={state.title}
+                    description={state.description}
+                  />
+                </div>
+              )}
+              {imageURLs[1] && imageURLs[1].length > 0 && (
+                <div>
+                  <NewsBox
+                    date={state.date}
+                    id={state.id}
+                    imgSrc={imageURLs[1][0]}
+                    title={state.title}
+                    description={state.description}
+                  />
+                </div>
+              )}
+              <div className="mt-2">
+                <input
+                  type={"file"}
+                  onChange={(event) => {
+                    let uploadedFilesCopy: Array<Array<File>> = [];
+                    uploadedFiles.map((uploadedFile) => {
+                      uploadedFilesCopy = [...uploadedFilesCopy, uploadedFile];
+                    });
+                    const selectedFiles = Array.from(event.target.files);
+                    uploadedFilesCopy[1] = selectedFiles;
+
+                    setUploadedFiles(uploadedFilesCopy);
+                  }}
+                />
+              </div>
+              <div className="h-8"></div>
             </div>
           )}
         </div>

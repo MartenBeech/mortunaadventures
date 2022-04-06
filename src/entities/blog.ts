@@ -1,5 +1,6 @@
 export interface GetBlogResponse {
   date: string;
+  description: string;
   id: number;
   label: string;
   location: { lat: number; long: number };

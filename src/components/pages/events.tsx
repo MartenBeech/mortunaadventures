@@ -25,6 +25,7 @@ export function Events() {
                   id={news.id}
                   imgSrc={news.imgSrc}
                   title={news.title}
+                  description={news.description}
                 />
               );
             })}

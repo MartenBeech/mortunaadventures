@@ -38,6 +38,7 @@ export function News() {
                   id={news.id}
                   imgSrc={news.imgSrc}
                   title={news.title}
+                  description={news.description}
                 />
               );
             })}
@@ -69,12 +70,13 @@ export async function GetAllNews(props: getAllNewsProps) {
   }
 
   const getImages = async (blog: GetBlogResponse) => {
-    const images = await GetImages({ id: blog.id, maxImages: 1 });
+    const images = await GetImages({ id: blog.id, maxImages: 2 });
     return {
       id: blog.id,
-      date: blog.date,
       title: blog.title,
-      imgSrc: images[0][0],
+      description: blog.description,
+      date: blog.date,
+      imgSrc: images[1][0],
     };
   };
 

@@ -36,6 +36,7 @@ export async function CreateBlog(props: CreateBlogProps) {
 
   await setDoc(doc(colRef, `${id}`), {
     id: id,
+    label: props.label,
     title: props.title,
     posts: props.posts,
     date: props.date,

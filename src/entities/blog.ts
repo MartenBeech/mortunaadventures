@@ -1,9 +1,10 @@
 export interface GetBlogResponse {
-  id: number;
-  title: string;
-  posts: Array<string>;
   date: string;
+  id: number;
+  label: string;
   location: { lat: number; long: number };
+  posts: Array<string>;
+  title: string;
 }
 
 export interface CreateBlogProps extends GetBlogResponse {}

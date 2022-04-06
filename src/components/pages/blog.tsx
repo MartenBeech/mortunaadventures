@@ -15,6 +15,7 @@ export function Blog() {
 
   const [state, setState] = useState({
     date: "",
+    label: "",
     id: 0,
     location: { lat: 0, long: 0 },
     posts: ["*TEXT HERE*"],
@@ -64,8 +65,8 @@ export function Blog() {
       ) : (
         <div>
           {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
-            <div className="flex flex-col justify-center mb-8 bg-details-light h-24">
-              <div className="flex items-center w-full mb-2">
+            <div className="flex flex-col justify-center mb-8 bg-details-light h-40">
+              <div className="flex items-center w-full">
                 <div className="font-montserrat font-bold w-1/4 ml-4">
                   Lati:{" "}
                 </div>
@@ -84,7 +85,7 @@ export function Blog() {
                   }}
                 />
               </div>
-              <div className="flex items-center w-full">
+              <div className="flex items-center w-full mt-2">
                 <div className="font-montserrat font-bold w-1/4 ml-4">
                   Long:{" "}
                 </div>
@@ -102,6 +103,25 @@ export function Blog() {
                     });
                   }}
                 />
+              </div>
+              <div className="flex items-center w-full mt-2">
+                <div className="font-montserrat font-bold w-1/4 ml-4">
+                  Label:{" "}
+                </div>
+                <select
+                  className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                  value={state.label}
+                  onChange={(event) => {
+                    setState({
+                      ...state,
+                      label: event.target.value,
+                    });
+                  }}
+                >
+                  <option value={""}>Please select an option...</option>
+                  <option>Travels</option>
+                  <option>Events</option>
+                </select>
               </div>
             </div>
           )}
@@ -132,7 +152,6 @@ export function Blog() {
                     <div>
                       {uploadedFiles[index + 1].length > 0 && (
                         <img
-                          className="max-h-56"
                           src={URL.createObjectURL(uploadedFiles[index + 1][0])}
                         />
                       )}
@@ -143,10 +162,7 @@ export function Blog() {
                   <div className="flex w-full justify-center">
                     <div>
                       {imageURLs[index + 1].length > 0 && (
-                        <img
-                          className="max-h-56"
-                          src={imageURLs[index + 1][0]}
-                        />
+                        <img src={imageURLs[index + 1][0]} />
                       )}
                     </div>
                   </div>
@@ -182,7 +198,7 @@ export function Blog() {
                   {imageURLs[0].map((imageUrl, index) => {
                     return (
                       <div key={index} className="mb-4 flex justify-center">
-                        <img className="max-h-60" src={imageUrl} />
+                        <img src={imageUrl} />
                       </div>
                     );
                   })}
@@ -195,10 +211,7 @@ export function Blog() {
                   {uploadedFiles[0].map((uploadedFile, index) => {
                     return (
                       <div key={index} className="mb-4 flex justify-center">
-                        <img
-                          className="max-h-60"
-                          src={URL.createObjectURL(uploadedFile)}
-                        />
+                        <img src={URL.createObjectURL(uploadedFile)} />
                       </div>
                     );
                   })}
@@ -241,6 +254,8 @@ export function Blog() {
                 onClick={() => {
                   if (state.location.lat >= 90 || state.location.long >= 90) {
                     setNotifyMsg("Latitude/Longitude must be less than 90");
+                  } else if (!state.label) {
+                    setNotifyMsg("Please select a label");
                   } else {
                     setLoading(true);
 
@@ -260,6 +275,7 @@ export function Blog() {
 
                     CreateBlog({
                       id: state.id,
+                      label: state.label,
                       location: state.location,
                       posts: state.posts,
                       title: state.title,

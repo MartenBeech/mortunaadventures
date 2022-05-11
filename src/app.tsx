@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navbar } from "./components/navbar";
 import { Login } from "./components/pages/login";
 
-enum ScreenSize {
+export enum ScreenSize {
   small,
   medium,
   large,

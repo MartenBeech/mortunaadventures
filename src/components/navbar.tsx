@@ -49,7 +49,42 @@ export const Navbar = () => {
         <Route path="/news" element={<News />}></Route>
         <Route path="/travels" element={<Travels />}></Route>
         <Route path="/events" element={<Events />}></Route>
-        <Route path="/europe" element={<GoogleMap />}></Route>
+        <Route
+          path="/north-america"
+          element={
+            <GoogleMap latitude={49.525963} longitude={-105.255119} zoom={2} />
+          }
+        ></Route>
+        <Route
+          path="/south-america"
+          element={
+            <GoogleMap latitude={-18.783195} longitude={-55.491478} zoom={2} />
+          }
+        ></Route>
+        <Route
+          path="/europe"
+          element={
+            <GoogleMap latitude={49.525963} longitude={15.255119} zoom={3} />
+          }
+        ></Route>
+        <Route
+          path="/africa"
+          element={
+            <GoogleMap latitude={2.783195} longitude={19.508522} zoom={2.3} />
+          }
+        ></Route>
+        <Route
+          path="/asia"
+          element={
+            <GoogleMap latitude={34.047863} longitude={100.619652} zoom={2} />
+          }
+        ></Route>
+        <Route
+          path="/australia"
+          element={
+            <GoogleMap latitude={-25.2744} longitude={133.7751} zoom={3} />
+          }
+        ></Route>
         <Route path="/blog/:id" element={<Blog />}></Route>
       </Routes>
     </BrowserRouter>

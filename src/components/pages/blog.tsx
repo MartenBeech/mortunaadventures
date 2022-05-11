@@ -5,8 +5,9 @@ import { GetImages, UploadImages } from "../../rest/storage";
 import { GetCurrentDate } from "../../services/dateConverter";
 import { Title, TitleInput } from "../title";
 import TextareaAutosize from "react-textarea-autosize";
-import { Username } from "./login";
+import { UserIsAdmin } from "./login";
 import { NewsBox } from "../newsBox";
+import { PointClicked } from "./googleMap";
 
 export function Blog() {
   const url = window.location.href;
@@ -18,10 +19,10 @@ export function Blog() {
     date: GetCurrentDate(),
     label: "",
     id: 0,
-    location: { lat: 0, long: 0 },
-    posts: ["TEXTHERE"],
-    title: "TITLE",
-    description: "DESCRIPTION",
+    location: { lat: PointClicked.latitude, long: PointClicked.longitude },
+    posts: [""],
+    title: "",
+    description: "",
   });
   const [uploadedFiles, setUploadedFiles] = useState([[], [], []] as Array<
     Array<File>
@@ -50,7 +51,7 @@ export function Blog() {
 
   return (
     <div className="ml-8 mr-8">
-      {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN ? (
+      {UserIsAdmin ? (
         <TitleInput state={state} setState={setState} />
       ) : (
         <Title title={state.title} />
@@ -58,10 +59,9 @@ export function Blog() {
 
       <TextareaAutosize
         className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg"
-        disabled={
-          Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN ? false : true
-        }
+        disabled={UserIsAdmin ? false : true}
         value={state.description}
+        placeholder="Please enter Description..."
         onChange={(event) => {
           setState({ ...state, description: event.target.value });
         }}
@@ -77,7 +77,7 @@ export function Blog() {
         <div>Loading...</div>
       ) : (
         <div>
-          {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
+          {UserIsAdmin && (
             <div className="flex flex-col justify-center mb-8 bg-details-light">
               <div className="mt-2 mb-2">
                 <div className="flex items-center w-full">
@@ -164,14 +164,11 @@ export function Blog() {
                   <div className="w-full">
                     <TextareaAutosize
                       className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg text-sm"
-                      disabled={
-                        Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN
-                          ? false
-                          : true
-                      }
+                      disabled={UserIsAdmin ? false : true}
                       value={post}
+                      placeholder="Please enter Text..."
                       onChange={(event) => {
-                        let posts = [...state.posts];
+                        const posts = [...state.posts];
                         posts[index] = event.target.value;
                         setState({ ...state, posts });
                       }}
@@ -198,7 +195,7 @@ export function Blog() {
                     </div>
                   </div>
                 )}
-                {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
+                {UserIsAdmin && (
                   <div className="mt-2">
                     <input
                       type={"file"}
@@ -249,7 +246,7 @@ export function Blog() {
                 </div>
               </div>
             )}
-            {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
+            {UserIsAdmin && (
               <input
                 type={"file"}
                 multiple
@@ -266,7 +263,7 @@ export function Blog() {
               />
             )}
           </div>
-          {Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN && (
+          {UserIsAdmin && (
             <div>
               <div className="flex justify-end mt-8">
                 <button

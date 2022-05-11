@@ -3,6 +3,7 @@ import buffer from "buffer";
 import { Auth } from "../../rest/auth";
 
 export let Username = "";
+export let UserIsAdmin = false;
 
 interface loginProps {
   setToken: any;
@@ -28,6 +29,8 @@ export function Login(props: loginProps) {
     }
 
     if (authenticated) {
+      UserIsAdmin = Username === process.env.REACT_APP_AUTH_EMAIL_ADMIN;
+
       const buff = buffer.Buffer.from(`${password}`).toString("base64");
       const basicAuth = `Basic ${buff}`;
 

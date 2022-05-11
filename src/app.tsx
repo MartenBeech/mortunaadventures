@@ -38,16 +38,20 @@ export function App() {
             ? "w-full"
             : screenSize === ScreenSize.medium
             ? "w-2/3"
-            : "w-1/2"
+            : screenSize === ScreenSize.large
+            ? "w-1/2"
+            : ""
         }
       >
-        {!token ? (
-          <Login setToken={setToken} />
-        ) : (
-          <div className="min-h-screen bg-background">
-            <Navbar />
-          </div>
-        )}
+        <div className="border-l border-r">
+          {!token ? (
+            <Login setToken={setToken} />
+          ) : (
+            <div className="min-h-screen bg-background">
+              <Navbar />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

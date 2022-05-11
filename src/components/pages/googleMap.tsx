@@ -5,28 +5,30 @@ import mapPin from "../../images/mapPin.png";
 import { Link } from "react-router-dom";
 import { GetBlogs } from "../../rest/blog";
 import { GetBlogResponse } from "../../entities/blog";
+import { UserIsAdmin } from "./login";
 
-interface viewportProps {
-  viewState: {
-    bearing: number;
-    latitude: number;
-    longitude: number;
-    padding: { top: number; bottom: number; left: number; right: number };
-    pitch: number;
-    zoom: number;
-  };
+export let PointClicked = { latitude: 0, longitude: 0 };
+
+interface googleMapProps {
+  latitude: number;
+  longitude: number;
+  zoom: number;
 }
 
-export function GoogleMap() {
+export function GoogleMap(props: googleMapProps) {
   const [viewport, setViewport] = useState({
-    latitude: 49.525963,
-    longitude: 15.255119,
+    latitude: props.latitude,
+    longitude: props.longitude,
     width: "100vw",
     height: "100vw",
-    zoom: 4,
+    zoom: props.zoom,
   });
   const [markerOpened, setMarkerOpened] = useState(null as GetBlogResponse);
   const [markers, setMarkers] = useState([] as Array<GetBlogResponse>);
+  const [pointClicked, setPointClicked] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
 
   useEffect(() => {
     const getData = async () => {
@@ -35,6 +37,17 @@ export function GoogleMap() {
     };
     getData();
   }, []);
+
+  interface viewportProps {
+    viewState: {
+      bearing: number;
+      latitude: number;
+      longitude: number;
+      padding: { top: number; bottom: number; left: number; right: number };
+      pitch: number;
+      zoom: number;
+    };
+  }
 
   function changeViewpoint(newViewport: viewportProps) {
     setViewport({
@@ -57,6 +70,18 @@ export function GoogleMap() {
         }}
         onDrag={(newViewport: viewportProps) => {
           changeViewpoint(newViewport);
+        }}
+        onClick={(event) => {
+          if (UserIsAdmin) {
+            setPointClicked({
+              latitude: event.lngLat.lat,
+              longitude: event.lngLat.lng,
+            });
+            PointClicked = {
+              latitude: event.lngLat.lat,
+              longitude: event.lngLat.lng,
+            };
+          }
         }}
       >
         {markers.map((marker, index: number) => {
@@ -97,6 +122,49 @@ export function GoogleMap() {
               <div className="font-montserrat">{markerOpened.date}</div>
             </div>
           </Popup>
+        )}
+        {pointClicked.latitude && pointClicked.longitude && (
+          <Marker
+            latitude={pointClicked.latitude}
+            longitude={pointClicked.longitude}
+            offset={[0, -20]}
+          >
+            <img src={mapPin} width="100%" />
+            <Popup
+              latitude={pointClicked.latitude}
+              longitude={pointClicked.longitude}
+              closeButton={false}
+              closeOnClick={false}
+              offset={[0, -43]}
+            >
+              <div className="flex">
+                <div>
+                  <Link to={`/blog/0`} className="w-1/2">
+                    <button className="px-2 border border-base bg-highlights hover:bg-details-light w-full h-10 rounded-xl font-montserrat">
+                      Create new Blog here
+                    </button>
+                  </Link>
+                </div>
+                <div>
+                  <button
+                    className="ml-2"
+                    onClick={() => {
+                      setPointClicked({
+                        latitude: 0,
+                        longitude: 0,
+                      });
+                      PointClicked = {
+                        latitude: 0,
+                        longitude: 0,
+                      };
+                    }}
+                  >
+                    x
+                  </button>
+                </div>
+              </div>
+            </Popup>
+          </Marker>
         )}
       </MapGL>
     </div>

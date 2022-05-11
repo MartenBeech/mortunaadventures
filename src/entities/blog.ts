@@ -8,4 +8,4 @@ export interface GetBlogResponse {
   title: string;
 }
 
-export interface CreateBlogProps extends GetBlogResponse {}
+export type CreateBlogProps = GetBlogResponse;

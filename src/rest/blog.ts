@@ -15,7 +15,7 @@ export async function GetBlog(blogId: number): Promise<GetBlogResponse> {
 }
 
 export async function GetBlogs(): Promise<Array<GetBlogResponse>> {
-  let returnValue: Array<GetBlogResponse> = [];
+  const returnValue: Array<GetBlogResponse> = [];
   const colRef = collection(db, "blogs");
   const colSnap = await getDocs(colRef);
   colSnap.forEach((doc) => {

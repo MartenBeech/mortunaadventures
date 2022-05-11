@@ -41,7 +41,7 @@ export function Login(props: loginProps) {
   };
 
   return (
-    <div className="flex w-screen h-screen justify-center items-center">
+    <div className="flex w-full h-screen justify-center items-center">
       <div className="flex flex-col w-full ml-4 mr-4 justify-center bg-gray-400 rounded-xl">
         <div className="flex justify-center text-2xl mt-8">
           Please Enter Password

@@ -22,7 +22,7 @@ export const Navbar = () => {
     <BrowserRouter>
       <div className="">
         <div className="flex bg-details-light">
-          <div className="flex box-border bg-details-light w-screen justify-around ml-2 mr-2">
+          <div className="flex box-border bg-details-light w-full justify-around ml-2 mr-2">
             <div className="flex w-full">
               <NavButton text="Home" link={"/"} icon={<ImHome size={14} />} />
               <NavButton

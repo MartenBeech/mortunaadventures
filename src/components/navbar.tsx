@@ -64,7 +64,7 @@ export const Navbar = () => {
         <Route
           path="/europe"
           element={
-            <GoogleMap latitude={49.525963} longitude={15.255119} zoom={3} />
+            <GoogleMap latitude={54.525963} longitude={15.255119} zoom={3} />
           }
         ></Route>
         <Route

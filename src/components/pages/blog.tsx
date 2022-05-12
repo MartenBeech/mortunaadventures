@@ -226,7 +226,11 @@ export function Blog() {
                   {imageURLs[0].map((imageUrl, index) => {
                     return (
                       <div key={index} className="mb-4 flex justify-center">
-                        <img src={imageUrl} />
+                        {imageUrl.includes("video") ? (
+                          <video src={imageUrl} controls></video>
+                        ) : (
+                          <img src={imageUrl} />
+                        )}
                       </div>
                     );
                   })}
@@ -239,7 +243,14 @@ export function Blog() {
                   {uploadedFiles[0].map((uploadedFile, index) => {
                     return (
                       <div key={index} className="mb-4 flex justify-center">
-                        <img src={URL.createObjectURL(uploadedFile)} />
+                        {uploadedFile.type.includes("video") ? (
+                          <video
+                            src={URL.createObjectURL(uploadedFile)}
+                            controls
+                          ></video>
+                        ) : (
+                          <img src={URL.createObjectURL(uploadedFile)} />
+                        )}
                       </div>
                     );
                   })}

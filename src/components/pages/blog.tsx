@@ -199,6 +199,7 @@ export function Blog() {
                   <div className="mt-2">
                     <input
                       type={"file"}
+                      accept={"image/*"}
                       onChange={(event) => {
                         let uploadedFilesCopy: Array<Array<File>> = [];
                         uploadedFiles.map((uploadedFile) => {
@@ -260,6 +261,7 @@ export function Blog() {
             {UserIsAdmin && (
               <input
                 type={"file"}
+                accept={"image/*, video/*"}
                 multiple
                 onChange={(event) => {
                   let uploadedFilesCopy: Array<Array<File>> = [];
@@ -357,6 +359,7 @@ export function Blog() {
               <div className="mt-2">
                 <input
                   type={"file"}
+                  accept={"image/*"}
                   onChange={(event) => {
                     let uploadedFilesCopy: Array<Array<File>> = [];
                     uploadedFiles.map((uploadedFile) => {

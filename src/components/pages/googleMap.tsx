@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import MapGL, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapPin from "../../images/mapPin.png";
+import mapPinMorten from "../../images/mapPinMorten.png";
+import mapPinUna from "../../images/mapPinUna.png";
 import clusterPin from "../../images/clusterPin.png";
 import { Link } from "react-router-dom";
 import { GetBlogs } from "../../rest/blog";
@@ -102,13 +104,14 @@ export function GoogleMap(props: googleMapProps) {
   });
 
   if (clusters.length > 0) {
-    markersShown.map((marker, index) => {
-      clusters.map((cluster) => {
-        if (cluster.includes(marker)) {
-          markersShown.splice(index);
+    for (let i = 0; i < markersShown.length; i++) {
+      for (let j = 0; j < clusters.length; j++) {
+        if (clusters[j].includes(markersShown[i])) {
+          markersShown.splice(i, 1);
+          i--;
         }
-      });
-    });
+      }
+    }
   }
 
   return (
@@ -153,7 +156,16 @@ export function GoogleMap(props: googleMapProps) {
                     setMarkerOpened(null);
                   }}
                 >
-                  <img src={mapPin} width="100%" />
+                  <img
+                    src={
+                      marker.people === "Morten"
+                        ? mapPinMorten
+                        : marker.people === "Una"
+                        ? mapPinUna
+                        : mapPin
+                    }
+                    width="100%"
+                  />
                 </button>
               </Link>
             </Marker>

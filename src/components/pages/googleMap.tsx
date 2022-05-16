@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MapGL, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapPin from "../../images/mapPin.png";
+import clusterPin from "../../images/clusterPin.png";
 import { Link } from "react-router-dom";
 import { GetBlogs } from "../../rest/blog";
 import { GetBlogResponse } from "../../entities/blog";
@@ -24,6 +25,10 @@ export function GoogleMap(props: googleMapProps) {
     zoom: props.zoom,
   });
   const [markerOpened, setMarkerOpened] = useState(null as GetBlogResponse);
+  const [clusterOpened, setClusterOpened] = useState({
+    cluster: null as Array<GetBlogResponse>,
+    location: { lat: 0, long: 0 },
+  });
   const [markers, setMarkers] = useState([] as Array<GetBlogResponse>);
   const [pointClicked, setPointClicked] = useState({
     latitude: 0,
@@ -59,6 +64,53 @@ export function GoogleMap(props: googleMapProps) {
     });
   }
 
+  const clusters: Array<Array<GetBlogResponse>> = [];
+  const markersShown = [...markers];
+
+  markersShown.sort((a, b) =>
+    a.location.lat + a.location.long < b.location.lat + b.location.long ? 1 : -1
+  );
+
+  const zoomFactor = 1.5 / viewport.zoom;
+
+  const pushMarkerInCluster = (marker: GetBlogResponse) => {
+    clusters[clusters.length - 1].push(marker);
+    if (markerOpened === marker) {
+      setMarkerOpened(null);
+    }
+  };
+
+  markersShown.map((marker, index) => {
+    if (
+      index > 0 &&
+      Math.abs(marker.location.lat - markersShown[index - 1].location.lat) <
+        zoomFactor &&
+      Math.abs(marker.location.long - markersShown[index - 1].location.long) <
+        zoomFactor
+    ) {
+      pushMarkerInCluster(marker);
+    } else if (
+      index < markersShown.length - 1 &&
+      Math.abs(marker.location.lat - markersShown[index + 1].location.lat) <
+        zoomFactor &&
+      Math.abs(marker.location.long - markersShown[index + 1].location.long) <
+        zoomFactor
+    ) {
+      clusters.push([]);
+      pushMarkerInCluster(marker);
+    }
+  });
+
+  if (clusters.length > 0) {
+    markersShown.map((marker, index) => {
+      clusters.map((cluster) => {
+        if (cluster.includes(marker)) {
+          markersShown.splice(index);
+        }
+      });
+    });
+  }
+
   return (
     <div className="h-screen">
       <MapGL
@@ -72,7 +124,7 @@ export function GoogleMap(props: googleMapProps) {
           changeViewpoint(newViewport);
         }}
         onClick={(event) => {
-          if (UserIsAdmin) {
+          if (UserIsAdmin && !clusterOpened.cluster) {
             setPointClicked({
               latitude: event.lngLat.lat,
               longitude: event.lngLat.lng,
@@ -84,7 +136,7 @@ export function GoogleMap(props: googleMapProps) {
           }
         }}
       >
-        {markers.map((marker, index: number) => {
+        {markersShown.map((marker, index) => {
           return (
             <Marker
               key={index}
@@ -115,11 +167,100 @@ export function GoogleMap(props: googleMapProps) {
             closeOnClick={false}
             offset={[0, -43]}
           >
-            <div>
-              <div className="text-lg font-montserrat">
-                {markerOpened.title}
+            <div className="w-40 bg-highlights border border-base">
+              <div className="ml-1 mr-1">
+                <div className="flex justify-center text-lg font-montserrat">
+                  {markerOpened.title}
+                </div>
+                <div className="mt-2 font-montserrat">
+                  {markerOpened.description}
+                </div>
+                <div className="flex justify-end mt-1 font-montserrat">
+                  {markerOpened.date}
+                </div>
               </div>
-              <div className="font-montserrat">{markerOpened.date}</div>
+            </div>
+          </Popup>
+        )}
+        {clusters.map((cluster, index) => {
+          const locationAverage = { lat: 0, long: 0 };
+          cluster.map((marker) => {
+            locationAverage.lat += marker.location.lat;
+            locationAverage.long += marker.location.long;
+          });
+          locationAverage.lat /= cluster.length;
+          locationAverage.long /= cluster.length;
+
+          return (
+            <Marker
+              key={index}
+              latitude={locationAverage.lat}
+              longitude={locationAverage.long}
+              offset={[0, 0]}
+            >
+              <button
+                onClick={() => {
+                  setClusterOpened({
+                    cluster: clusterOpened.cluster === cluster ? null : cluster,
+                    location: locationAverage,
+                  });
+                }}
+              >
+                <div className="flex justify-center">
+                  <img src={clusterPin} width="100%" />
+                  <p className="absolute mt-3">{cluster.length}</p>
+                </div>
+              </button>
+            </Marker>
+          );
+        })}
+        {clusterOpened.cluster && (
+          <Popup
+            latitude={clusterOpened.location.lat}
+            longitude={clusterOpened.location.long}
+            closeButton={false}
+            closeOnClick={false}
+            offset={[0, -43]}
+          >
+            <div className="flex justify-end">
+              <button
+                className="ml-2"
+                onClick={() => {
+                  setClusterOpened({
+                    cluster: null,
+                    location: { lat: 0, long: 0 },
+                  });
+                }}
+              >
+                x
+              </button>
+            </div>
+            <div className="flex justify-center w-48 max-h-60 overflow-auto">
+              <div className="flex flex-col">
+                {clusterOpened.cluster
+                  .sort((a, b) => (a.id < b.id ? 1 : -1))
+                  .map((marker, index) => {
+                    return (
+                      <Link key={index} to={`/blog/${marker.id}`}>
+                        <button>
+                          <div className="w-40 border border-base mb-2 bg-highlights">
+                            <div className="ml-1 mr-1">
+                              <div className="flex justify-center text-lg font-montserrat">
+                                {marker.title}
+                              </div>
+                              <div className="flex justify-start mt-2 font-montserrat">
+                                {marker.description}
+                              </div>
+                              <div className="flex justify-end font-montserrat mt-1">
+                                {marker.date}
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+                      </Link>
+                    );
+                  })}
+              </div>
             </div>
           </Popup>
         )}

@@ -23,6 +23,7 @@ export function Blog() {
     posts: [""],
     title: "",
     description: "",
+    people: "",
   });
   const [uploadedFiles, setUploadedFiles] = useState([[], [], []] as Array<
     Array<File>
@@ -120,7 +121,7 @@ export function Blog() {
                 </div>
                 <div className="flex items-center w-full mt-2">
                   <div className="font-montserrat font-bold w-1/4 ml-4">
-                    Label:{" "}
+                    Label:
                   </div>
                   <select
                     className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
@@ -132,9 +133,30 @@ export function Blog() {
                       });
                     }}
                   >
-                    <option value={""}>Please select an option...</option>
+                    <option value={""} disabled>
+                      Please select an option...
+                    </option>
                     <option>Travels</option>
                     <option>Events</option>
+                  </select>
+                </div>
+                <div className="flex items-center w-full mt-2">
+                  <div className="font-montserrat font-bold w-1/4 ml-4">
+                    People:
+                  </div>
+                  <select
+                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                    value={state.people}
+                    onChange={(event) => {
+                      setState({
+                        ...state,
+                        people: event.target.value,
+                      });
+                    }}
+                  >
+                    <option value={""}>Both</option>
+                    <option value={"Una"}>Una Martusanska</option>
+                    <option value={"Morten"}>Morten Bech</option>
                   </select>
                 </div>
                 <div className="flex items-center w-full mt-2">
@@ -324,6 +346,7 @@ export function Blog() {
                         title: state.title,
                         date: state.date,
                         description: state.description,
+                        people: state.people,
                       }).then((id) => {
                         uploader(id);
                       });

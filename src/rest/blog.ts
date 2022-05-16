@@ -42,6 +42,7 @@ export async function CreateBlog(props: CreateBlogProps) {
     date: props.date,
     location: props.location,
     description: props.description,
+    people: props.people,
   });
   return id;
 }

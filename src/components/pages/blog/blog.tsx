@@ -8,7 +8,7 @@ import { UserIsAdmin } from "../login";
 import { NewsBox } from "../../newsBox";
 import { PointClicked } from "../googleMap";
 import { Paragraph, TextArea } from "../../paragraph";
-import { Input } from "./blogComponent";
+import { FileInput, Input } from "./blogComponent";
 
 export function Blog() {
   const url = window.location.href;
@@ -52,7 +52,7 @@ export function Blog() {
   }, []);
 
   return (
-    <div className="ml-8 mr-8">
+    <div className="ml-2 mr-2">
       {UserIsAdmin ? (
         <TitleInput state={state} setState={setState} />
       ) : (
@@ -78,7 +78,7 @@ export function Blog() {
       ) : (
         <div>
           {UserIsAdmin && (
-            <div className="flex flex-col justify-center mb-8 bg-details-light">
+            <div className="flex flex-col justify-center mb-8 bg-highlights border border-base">
               <div className="mt-2 mb-2">
                 <div className="flex items-center w-full">
                   <div className="w-1/4 ml-4">
@@ -121,7 +121,7 @@ export function Blog() {
                     <Paragraph value="Label:" bold />
                   </div>
                   <select
-                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                    className="w-full h-10 px-2 bg-highlights border-base border ml-4 rounded font-montserrat mr-4"
                     value={state.label}
                     onChange={(event) => {
                       setState({
@@ -142,7 +142,7 @@ export function Blog() {
                     <Paragraph value="People:" bold />
                   </div>
                   <select
-                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
+                    className="w-full h-10 px-2 bg-highlights border-base border ml-4 rounded font-montserrat mr-4"
                     value={state.people}
                     onChange={(event) => {
                       setState({
@@ -214,9 +214,7 @@ export function Blog() {
                 )}
                 {UserIsAdmin && (
                   <div className="mt-2">
-                    <input
-                      type={"file"}
-                      accept={"image/*"}
+                    <FileInput
                       onChange={(event) => {
                         let uploadedFilesCopy: Array<Array<File>> = [];
                         uploadedFiles.map((uploadedFile) => {
@@ -276,9 +274,8 @@ export function Blog() {
               </div>
             )}
             {UserIsAdmin && (
-              <input
-                type={"file"}
-                accept={"image/*, video/*"}
+              <FileInput
+                includeVideos
                 multiple
                 onChange={(event) => {
                   let uploadedFilesCopy: Array<Array<File>> = [];
@@ -295,7 +292,44 @@ export function Blog() {
           </div>
           {UserIsAdmin && (
             <div>
-              <div className="flex justify-end mt-8">
+              <Title title="Preview" />
+              {uploadedFiles[1] && uploadedFiles[1].length > 0 && (
+                <div>
+                  <NewsBox
+                    date={state.date}
+                    id={state.id}
+                    imgSrc={URL.createObjectURL(uploadedFiles[1][0])}
+                    title={state.title}
+                    description={state.description}
+                  />
+                </div>
+              )}
+              {imageURLs[1] && imageURLs[1].length > 0 && (
+                <div>
+                  <NewsBox
+                    date={state.date}
+                    id={state.id}
+                    imgSrc={imageURLs[1][0]}
+                    title={state.title}
+                    description={state.description}
+                  />
+                </div>
+              )}
+              <div className="mt-2">
+                <FileInput
+                  onChange={(event) => {
+                    let uploadedFilesCopy: Array<Array<File>> = [];
+                    uploadedFiles.map((uploadedFile) => {
+                      uploadedFilesCopy = [...uploadedFilesCopy, uploadedFile];
+                    });
+                    const selectedFiles = Array.from(event.target.files);
+                    uploadedFilesCopy[1] = selectedFiles;
+
+                    setUploadedFiles(uploadedFilesCopy);
+                  }}
+                />
+              </div>
+              <div className="flex justify-end mt-20 mb-8">
                 <button
                   className="border border-base bg-highlights hover:bg-details-light w-1/3 mr-8 h-12 mb-4 rounded-xl font-montserrat"
                   onClick={() => {
@@ -351,46 +385,6 @@ export function Blog() {
                   Submit
                 </button>
               </div>
-              <Title title="Preview" />
-              {uploadedFiles[1] && uploadedFiles[1].length > 0 && (
-                <div>
-                  <NewsBox
-                    date={state.date}
-                    id={state.id}
-                    imgSrc={URL.createObjectURL(uploadedFiles[1][0])}
-                    title={state.title}
-                    description={state.description}
-                  />
-                </div>
-              )}
-              {imageURLs[1] && imageURLs[1].length > 0 && (
-                <div>
-                  <NewsBox
-                    date={state.date}
-                    id={state.id}
-                    imgSrc={imageURLs[1][0]}
-                    title={state.title}
-                    description={state.description}
-                  />
-                </div>
-              )}
-              <div className="mt-2">
-                <input
-                  type={"file"}
-                  accept={"image/*"}
-                  onChange={(event) => {
-                    let uploadedFilesCopy: Array<Array<File>> = [];
-                    uploadedFiles.map((uploadedFile) => {
-                      uploadedFilesCopy = [...uploadedFilesCopy, uploadedFile];
-                    });
-                    const selectedFiles = Array.from(event.target.files);
-                    uploadedFilesCopy[1] = selectedFiles;
-
-                    setUploadedFiles(uploadedFilesCopy);
-                  }}
-                />
-              </div>
-              <div className="h-8"></div>
             </div>
           )}
         </div>

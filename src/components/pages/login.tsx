@@ -7,7 +7,7 @@ export let Username = "";
 export let UserIsAdmin = false;
 
 interface loginProps {
-  setToken: any;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function Login(props: loginProps) {

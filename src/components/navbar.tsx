@@ -15,7 +15,7 @@ import { GiCommercialAirplane } from "react-icons/gi";
 import { GiNewspaper } from "react-icons/gi";
 import { MdOutlineAttractions } from "react-icons/md";
 import { ImHome } from "react-icons/im";
-import { Blog } from "./pages/blog";
+import { Blog } from "./pages/blog/blog";
 
 export const Navbar = () => {
   return (
@@ -102,12 +102,12 @@ const NavButton = (props: buttonProps) => {
     <div className="flex w-full">
       <div className="w-full">
         <Link to={`${props.link}`}>
-          <div className="w-full ml-2 flex">
+          <div className="w-full ml-2 flex text-dark h-10 w-2/3 font-montserrat">
             <button
               className={
                 props.link === useLocation().pathname
-                  ? "text-text h-10 w-2/3 cursor-default opacity-50 text-xs"
-                  : "text-text h-10 w-2/3 hover:text-base font-montserrat font-bold text-xs hover:text-xs"
+                  ? "cursor-default opacity-50 text-xs"
+                  : "hover:text-base font-bold text-xs hover:text-xs"
               }
             >
               <div className="flex">

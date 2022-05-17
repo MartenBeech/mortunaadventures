@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { GetBlogResponse } from "../../entities/blog";
-import { GetBlog, CreateBlog } from "../../rest/blog";
-import { GetImages, UploadImages } from "../../rest/storage";
-import { GetCurrentDate } from "../../services/dateConverter";
-import { Title, TitleInput } from "../title";
-import TextareaAutosize from "react-textarea-autosize";
-import { UserIsAdmin } from "./login";
-import { NewsBox } from "../newsBox";
-import { PointClicked } from "./googleMap";
+import { GetBlogResponse } from "../../../entities/blog";
+import { GetBlog, CreateBlog } from "../../../rest/blog";
+import { GetImages, UploadImages } from "../../../rest/storage";
+import { GetCurrentDate } from "../../../services/dateConverter";
+import { Title, TitleInput } from "../../title";
+import { UserIsAdmin } from "../login";
+import { NewsBox } from "../../newsBox";
+import { PointClicked } from "../googleMap";
+import { Paragraph, TextArea } from "../../paragraph";
+import { Input } from "./blogComponent";
 
 export function Blog() {
   const url = window.location.href;
@@ -58,11 +59,9 @@ export function Blog() {
         <Title title={state.title} />
       )}
 
-      <TextareaAutosize
-        className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg"
-        disabled={UserIsAdmin ? false : true}
+      <TextArea
+        elementName="Description"
         value={state.description}
-        placeholder="Please enter Description..."
         onChange={(event) => {
           setState({ ...state, description: event.target.value });
         }}
@@ -70,7 +69,7 @@ export function Blog() {
 
       {notifyMsg && (
         <div className="flex justify-center items-center w-full bg-highlights mb-8">
-          {notifyMsg}
+          <Paragraph value={notifyMsg} />
         </div>
       )}
 
@@ -82,12 +81,11 @@ export function Blog() {
             <div className="flex flex-col justify-center mb-8 bg-details-light">
               <div className="mt-2 mb-2">
                 <div className="flex items-center w-full">
-                  <div className="font-montserrat font-bold w-1/4 ml-4">
-                    Lati:{" "}
+                  <div className="w-1/4 ml-4">
+                    <Paragraph value="Lati:" bold />
                   </div>
-                  <input
-                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
-                    type={"number"}
+                  <Input
+                    type="number"
                     value={state.location.lat}
                     onChange={(event) => {
                       setState({
@@ -101,12 +99,11 @@ export function Blog() {
                   />
                 </div>
                 <div className="flex items-center w-full mt-2">
-                  <div className="font-montserrat font-bold w-1/4 ml-4">
-                    Long:{" "}
+                  <div className="w-1/4 ml-4">
+                    <Paragraph value="Long:" bold />
                   </div>
-                  <input
-                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
-                    type={"number"}
+                  <Input
+                    type="number"
                     value={state.location.long}
                     onChange={(event) => {
                       setState({
@@ -120,8 +117,8 @@ export function Blog() {
                   />
                 </div>
                 <div className="flex items-center w-full mt-2">
-                  <div className="font-montserrat font-bold w-1/4 ml-4">
-                    Label:
+                  <div className="w-1/4 ml-4">
+                    <Paragraph value="Label:" bold />
                   </div>
                   <select
                     className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
@@ -141,8 +138,8 @@ export function Blog() {
                   </select>
                 </div>
                 <div className="flex items-center w-full mt-2">
-                  <div className="font-montserrat font-bold w-1/4 ml-4">
-                    People:
+                  <div className="w-1/4 ml-4">
+                    <Paragraph value="People:" bold />
                   </div>
                   <select
                     className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
@@ -160,12 +157,11 @@ export function Blog() {
                   </select>
                 </div>
                 <div className="flex items-center w-full mt-2">
-                  <div className="font-montserrat font-bold w-1/4 ml-4">
-                    Date:{" "}
+                  <div className="w-1/4 ml-4">
+                    <Paragraph value="Date:" bold />
                   </div>
-                  <input
-                    className="w-full h-10 px-2 bg-details-light border-base border ml-4 rounded font-montserrat mr-4"
-                    type={"text"}
+                  <Input
+                    type="text"
                     value={state.date}
                     onChange={(event) => {
                       setState({
@@ -184,11 +180,10 @@ export function Blog() {
               <div key={index} className="mt-8">
                 <div className="mt-2">
                   <div className="w-full">
-                    <TextareaAutosize
-                      className="font-montserrat w-full bg-background resize-none px-2 py-2 rounded-lg text-sm"
-                      disabled={UserIsAdmin ? false : true}
+                    <TextArea
+                      elementName="Text"
                       value={post}
-                      placeholder="Please enter Text..."
+                      textSize="sm"
                       onChange={(event) => {
                         const posts = [...state.posts];
                         posts[index] = event.target.value;

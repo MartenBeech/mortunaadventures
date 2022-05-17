@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ScreenSize } from "../app";
+import { Paragraph } from "./paragraph";
 
 export interface NewsBoxProps {
   id: number;
@@ -47,26 +48,26 @@ export function NewsBox(props: NewsBoxProps) {
           </div>
           {screenSize === ScreenSize.small ? (
             <div className="w-1/2">
-              <div className="font-montserrat flex justify-center mt-2 mb-2 ml-2 mr-2 font-bold">
-                {props.title}
+              <div className="flex justify-center m-2">
+                <Paragraph value={props.title} bold />
               </div>
-              <div className="font-montserrat flex justify-start mt-2 mb-2 ml-2 mr-2 text-sm">
-                {props.description}
+              <div className="flex justify-start m-2">
+                <Paragraph value={props.description} textSize={"sm"} />
               </div>
-              <div className="font-montserrat flex justify-end mt-2 mb-2 ml-2 mr-2 items-end text-sm">
-                {props.date}
+              <div className="flex justify-end m-2 items-end">
+                <Paragraph value={props.date} textSize={"sm"} />
               </div>
             </div>
           ) : (
             <div className="w-1/2">
-              <div className="font-montserrat flex justify-center mt-2 mb-2 ml-2 mr-2 font-bold text-xl">
-                {props.title}
+              <div className="flex justify-center m-2">
+                <Paragraph value={props.title} bold textSize="xl" />
               </div>
-              <div className="font-montserrat flex justify-start mt-2 mb-2 ml-2 mr-2">
-                {props.description}
+              <div className="flex justify-start m-2">
+                <Paragraph value={props.description} />
               </div>
-              <div className="font-montserrat flex justify-end mt-2 mb-2 ml-2 mr-2 items-end">
-                {props.date}
+              <div className="flex justify-end m-2 items-end">
+                <Paragraph value={props.date} />
               </div>
             </div>
           )}

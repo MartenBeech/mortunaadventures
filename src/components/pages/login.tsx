@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import buffer from "buffer";
 import { Auth } from "../../rest/auth";
+import { Paragraph } from "../paragraph";
 
 export let Username = "";
 export let UserIsAdmin = false;
@@ -45,14 +46,14 @@ export function Login(props: loginProps) {
 
   return (
     <div className="flex w-full h-screen justify-center items-center">
-      <div className="flex flex-col w-full ml-4 mr-4 justify-center bg-gray-400 rounded-xl">
-        <div className="flex justify-center text-2xl mt-8">
-          Please Enter Password
+      <div className="flex flex-col w-full ml-4 mr-4 justify-center bg-details-light rounded-xl">
+        <div className="flex justify-center mt-8">
+          <Paragraph value="Please Enter Password" textSize="2xl" />
         </div>
         {errorMsg && (
           <div className="flex justify-center w-full">
-            <div className="flex justify-center rounded w-2/3 text-lg text-red-500 bg-red-200 mt-4">
-              {errorMsg}
+            <div className="flex justify-center rounded w-2/3 bg-error mt-4">
+              <Paragraph value={errorMsg} textSize={"lg"} />
             </div>
           </div>
         )}
@@ -62,7 +63,9 @@ export function Login(props: loginProps) {
           }}
         >
           <label>
-            <div className="flex justify-center mt-8 text-lg">Password</div>
+            <div className="flex justify-center mt-8">
+              <Paragraph value="Password" textSize="lg" />
+            </div>
             <div className="flex justify-center">
               <input
                 className="border w-2/3 rounded px-2"
@@ -73,10 +76,10 @@ export function Login(props: loginProps) {
           </label>
           <div className="flex justify-center">
             <button
-              className="mt-8 border border-black rounded bg-barma-blue-dark text-white hover:bg-barma-blue-light mb-8 w-1/4"
+              className="mt-8 border border-black rounded bg-highlights hover:bg-details-light text-dark font-montserrat mb-8 w-1/4"
               type="submit"
             >
-              Submit
+              Log in
             </button>
           </div>
         </form>

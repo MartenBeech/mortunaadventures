@@ -7,10 +7,8 @@ interface titleProps {
 
 export function Title(props: titleProps) {
   return (
-    <div className="mt-8 mb-8">
-      <div className="text-3xl font-serif font-bold text-base border-b">
-        {props.title}
-      </div>
+    <div className="mt-8 mb-8 text-base">
+      <p className=" font-serif font-bold text-2xl border-b">{props.title}</p>
     </div>
   );
 }
@@ -22,9 +20,9 @@ interface titleInputProps {
 
 export function TitleInput(props: titleInputProps) {
   return (
-    <div className="mt-8 mb-8">
+    <div className="mt-8 mb-8 text-base">
       <input
-        className="text-3xl font-serif font-bold text-base border-b w-full bg-background"
+        className=" font-serif font-bold text-2xl border-b w-full bg-background"
         value={props.state.title}
         placeholder="Please enter Title..."
         onChange={(event) => {

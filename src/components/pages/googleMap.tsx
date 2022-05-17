@@ -225,7 +225,7 @@ export function GoogleMap(props: googleMapProps) {
           >
             <div className="flex justify-end">
               <button
-                className="ml-2"
+                className="w-6 h-6 -mt-2 -mr-2"
                 onClick={() => {
                   setClusterOpened({
                     cluster: null,
@@ -233,7 +233,7 @@ export function GoogleMap(props: googleMapProps) {
                   });
                 }}
               >
-                x
+                X
               </button>
             </div>
             <div className="flex justify-center w-48 max-h-60 overflow-auto">
@@ -282,14 +282,14 @@ export function GoogleMap(props: googleMapProps) {
               <div className="flex">
                 <div>
                   <Link to={`/blog/0`} className="w-1/2">
-                    <button className="px-2 border border-base bg-highlights hover:bg-details-light w-full h-10 rounded-xl font-montserrat">
-                      Create new Blog here
+                    <button className="px-4 border border-base bg-highlights hover:bg-details-light w-full h-10 rounded-xl font-montserrat">
+                      Create Blog here
                     </button>
                   </Link>
                 </div>
-                <div>
+                <div className="">
                   <button
-                    className="ml-2"
+                    className="w-6 h-6 -mt-2 -mr-2"
                     onClick={() => {
                       setPointClicked({
                         latitude: 0,
@@ -301,7 +301,7 @@ export function GoogleMap(props: googleMapProps) {
                       };
                     }}
                   >
-                    x
+                    X
                   </button>
                 </div>
               </div>

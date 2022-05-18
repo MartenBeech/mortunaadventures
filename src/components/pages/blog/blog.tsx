@@ -335,7 +335,7 @@ export function Blog() {
                   onClick={() => {
                     setState({
                       ...state,
-                      posts: [...state.posts, "*TEXT HERE*"],
+                      posts: [...state.posts, ""],
                     });
                     setUploadedFiles([...uploadedFiles, []]);
                   }}

@@ -4,9 +4,9 @@ export interface GetBlogResponse {
   id: number;
   label: string;
   location: { lat: number; long: number };
+  people: string;
   posts: Array<string>;
   title: string;
-  people: string;
 }
 
 export type CreateBlogProps = GetBlogResponse;

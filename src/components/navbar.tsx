@@ -97,22 +97,22 @@ interface buttonProps {
   icon?: JSX.Element;
 }
 
-const NavButton = (props: buttonProps) => {
+const NavButton = ({ text, link, icon }: buttonProps) => {
   return (
     <div className="flex w-full">
       <div className="w-full">
-        <Link to={`${props.link}`}>
+        <Link to={`${link}`}>
           <div className="w-full ml-2 flex text-dark h-10 w-2/3 font-montserrat">
             <button
               className={
-                props.link === useLocation().pathname
+                link === useLocation().pathname
                   ? "cursor-default opacity-50 text-xs"
                   : "hover:text-base font-bold text-xs hover:text-xs"
               }
             >
               <div className="flex">
-                <div className="mr-1">{props.icon}</div>
-                <div>{props.text.toLocaleUpperCase()}</div>
+                <div className="mr-1">{icon}</div>
+                <div>{text.toLocaleUpperCase()}</div>
               </div>
             </button>
           </div>

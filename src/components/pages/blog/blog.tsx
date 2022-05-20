@@ -234,6 +234,20 @@ export function Blog() {
               </div>
             );
           })}
+          <div className="flex justify-end">
+            <button
+              className="border border-base bg-highlights hover:bg-details-light w-1/3 h-12 mb-4 rounded-xl font-montserrat mt-8"
+              onClick={() => {
+                setState({
+                  ...state,
+                  posts: [...state.posts, ""],
+                });
+                setUploadedFiles([...uploadedFiles, []]);
+              }}
+            >
+              Add Chapter
+            </button>
+          </div>
           <Title title="Gallery" />
           <div className="mt-8">
             {imageURLs[0] && (
@@ -330,18 +344,6 @@ export function Blog() {
                 />
               </div>
               <div className="flex justify-end mt-20 mb-8">
-                <button
-                  className="border border-base bg-highlights hover:bg-details-light w-1/3 mr-8 h-12 mb-4 rounded-xl font-montserrat"
-                  onClick={() => {
-                    setState({
-                      ...state,
-                      posts: [...state.posts, ""],
-                    });
-                    setUploadedFiles([...uploadedFiles, []]);
-                  }}
-                >
-                  Add Chapter
-                </button>
                 <button
                   className="border border-base bg-highlights hover:bg-details-light w-1/2 h-12 mb-4 rounded-xl font-montserrat"
                   onClick={() => {

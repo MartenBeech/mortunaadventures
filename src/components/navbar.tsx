@@ -94,7 +94,7 @@ export const Navbar = () => {
 interface buttonProps {
   text: string;
   link: string;
-  icon?: any;
+  icon?: JSX.Element;
 }
 
 const NavButton = (props: buttonProps) => {

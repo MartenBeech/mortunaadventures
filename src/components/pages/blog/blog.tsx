@@ -18,7 +18,7 @@ export function Blog() {
 
   const [state, setState] = useState<GetBlogResponse>({
     date: GetCurrentDate(),
-    label: "",
+    label: "Travels",
     id: 0,
     location: { lat: PointClicked.latitude, long: PointClicked.longitude },
     posts: [""],
@@ -26,16 +26,18 @@ export function Blog() {
     description: "",
     people: "",
   });
-  const [uploadedFiles, setUploadedFiles] = useState([[], [], []] as Array<
-    Array<File>
-  >);
-  const [imageURLs, setImageURLs] = useState([] as Array<Array<string>>);
-  const [loading, setLoading] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<Array<Array<File>>>([
+    [],
+    [],
+    [],
+  ]);
+  const [imageURLs, setImageURLs] = useState<Array<Array<string>>>([]);
+  const [loading, setLoading] = useState<"true" | "false" | "done">("false");
   const [notifyMsg, setNotifyMsg] = useState("");
 
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
+      setLoading("true");
       const blog = await GetBlog(id);
       setState(blog);
       const images = await GetImages({
@@ -43,13 +45,17 @@ export function Blog() {
         maxImages: blog.posts.length + 2,
       });
       setImageURLs(images);
-      setLoading(false);
+      setLoading("false");
     };
 
     if (id) {
       getData();
     }
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [notifyMsg]);
 
   return (
     <div className="ml-2 mr-2">
@@ -68,14 +74,13 @@ export function Blog() {
       />
 
       {notifyMsg && (
-        <div className="flex justify-center items-center w-full bg-highlights mb-8">
-          <Paragraph value={notifyMsg} />
+        <div className="flex justify-center items-center w-full bg-highlights mb-8 h-12">
+          <Paragraph value={notifyMsg} bold />
         </div>
       )}
 
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
+      {loading === "true" && <div>Loading...</div>}
+      {loading === "false" && (
         <div>
           {UserIsAdmin && (
             <div className="flex flex-col justify-center mb-8 bg-highlights border border-base">
@@ -235,6 +240,24 @@ export function Blog() {
             );
           })}
           <div className="flex justify-end">
+            {!state.posts[state.posts.length - 1] && state.posts.length > 1 && (
+              <button
+                className="border border-base bg-error hover:bg-background w-1/3 h-12 mb-4 rounded-xl font-montserrat mt-8 mr-4"
+                onClick={() => {
+                  const newPosts = [...state.posts];
+                  newPosts.splice(newPosts.length - 1, 1);
+                  const newUploadedFiles = [...uploadedFiles];
+                  newUploadedFiles.splice(newUploadedFiles.length - 1, 1);
+                  setState({
+                    ...state,
+                    posts: [...newPosts],
+                  });
+                  setUploadedFiles([...newUploadedFiles]);
+                }}
+              >
+                Remove last chapter
+              </button>
+            )}
             <button
               className="border border-base bg-highlights hover:bg-details-light w-1/3 h-12 mb-4 rounded-xl font-montserrat mt-8"
               onClick={() => {
@@ -245,7 +268,7 @@ export function Blog() {
                 setUploadedFiles([...uploadedFiles, []]);
               }}
             >
-              Add Chapter
+              Add chapter
             </button>
           </div>
           <Title title="Gallery" />
@@ -352,20 +375,39 @@ export function Blog() {
                     } else if (!state.label) {
                       setNotifyMsg("Please select a label");
                     } else {
-                      setLoading(true);
+                      setLoading("true");
                       setNotifyMsg("");
 
-                      const uploader = async (id: number) => {
+                      const uploader = async (folderId: number) => {
+                        uploadedFiles[0] = uploadedFiles[0].map(
+                          (image, index) => {
+                            index += imageURLs[0]?.length || 0;
+                            const imageId =
+                              index < 10
+                                ? `00${index}`
+                                : index < 100
+                                ? `0${index}`
+                                : index;
+                            return (image = new File(
+                              [image],
+                              `image_${imageId}`,
+                              {
+                                type: image.type,
+                              }
+                            ));
+                          }
+                        );
                         await Promise.all(
                           uploadedFiles.map((uploadedFile, index) => {
                             return UploadImages({
-                              id: id,
+                              folderId: folderId,
                               files: uploadedFile,
                               chapter: index,
                             });
                           })
                         ).then(() => {
                           setNotifyMsg("Successfully uploaded blog!");
+                          setLoading("done");
                         });
                       };
 

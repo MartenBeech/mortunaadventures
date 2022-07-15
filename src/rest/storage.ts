@@ -7,7 +7,7 @@ import {
 } from "firebase/storage";
 
 interface uploadImagesProps {
-  id: number;
+  folderId: number;
   chapter: number;
   files: Array<File>;
 }
@@ -18,7 +18,7 @@ export async function UploadImages(props: uploadImagesProps) {
     props.files.map((file) => {
       const imagesRef = ref(
         storage,
-        `images/${props.id}/${props.chapter}/${file.name}`
+        `images/${props.folderId}/${props.chapter}/${file.name}`
       );
       return uploadBytes(imagesRef, file);
     })

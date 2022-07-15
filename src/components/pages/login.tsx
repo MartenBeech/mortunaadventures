@@ -53,7 +53,7 @@ export function Login(props: loginProps) {
         {errorMsg && (
           <div className="flex justify-center w-full">
             <div className="flex justify-center rounded w-2/3 bg-error mt-4">
-              <Paragraph value={errorMsg} textSize={"lg"} />
+              <Paragraph value={errorMsg} textSize="lg" />
             </div>
           </div>
         )}
@@ -63,12 +63,12 @@ export function Login(props: loginProps) {
           }}
         >
           <label>
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-12">
               <Paragraph value="Password" textSize="lg" />
             </div>
             <div className="flex justify-center">
               <input
-                className="border w-2/3 rounded px-2"
+                className="border w-2/3 rounded px-2 h-8"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -76,7 +76,7 @@ export function Login(props: loginProps) {
           </label>
           <div className="flex justify-center">
             <button
-              className="mt-8 border border-black rounded bg-highlights hover:bg-details-light text-dark font-montserrat mb-8 w-1/4"
+              className="mt-8 border border-black rounded bg-highlights hover:bg-details-light text-dark font-montserrat mb-8 w-1/4 h-8"
               type="submit"
             >
               Log in

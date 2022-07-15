@@ -26,7 +26,7 @@ export function Homepage() {
   return (
     <div>
       <div className="h-full w-full relative">
-        <img className="relative" src={worldMap} />
+        <img className="relative" src={worldMap} width="100%" />
         <Link
           className="absolute w-2/7 h-2/5 top-20%"
           to={"north-america"}
